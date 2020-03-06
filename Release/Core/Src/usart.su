@@ -1,0 +1,4 @@
+usart.cpp:41:6:void MX_USART1_UART_Init()	8	static
+usart.cpp:62:6:void MX_USART2_UART_Init()	8	static
+usart.cpp:82:6:void HAL_UART_MspInit(UART_HandleTypeDef*)	56	static
+usart.cpp:149:6:void HAL_UART_MspDeInit(UART_HandleTypeDef*)	8	static

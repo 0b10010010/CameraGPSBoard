@@ -1,0 +1,2 @@
+Location.cpp:11:1:Location::Location()	16	static
+Location.cpp:16:6:void Location::zero()	16	static
