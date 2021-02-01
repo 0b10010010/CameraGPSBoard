@@ -22,6 +22,7 @@
 #include <RingBuffer.h>
 #include "main.h"
 extern "C" {
+#include "dma.h"
 #include "gpio.h"
 #include "string.h"
 #include "usart.h"
