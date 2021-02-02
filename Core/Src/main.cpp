@@ -19,12 +19,14 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
-#include <RingBuffer.h>
+//#include <RingBuffer.h>
 #include "main.h"
 extern "C" {
+#include "dma.h"
 #include "gpio.h"
-#include "string.h"
 #include "usart.h"
+#include "ublox_gps.h"
+#include "CircularBuffer.h"
 }
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -48,30 +50,54 @@ extern "C" {
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-#define RX_BUFFER_SIZE 10
-uint8_t rxBuffer[RX_BUFFER_SIZE];
+#define RX_BUFFER_SIZE 172 // Max M8N message size
+static const uint8_t NAV_PVT_payloadSize = 96; // M8N protocol
+
+struct _commBuffer_t rxBuffer; // max buffer size is defined in CircularBuffer.h
+
+uint8_t c = {0};
+
+char buffer[101]; // size of the entire nav_pvt message (100 bytes)
+
+unsigned short imgIndex = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+void sendGPSData(void);
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin); // uses pin A1 (PA1)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void sendGPSData() // takes about 14050 cycles -> 14050/80MHz = 0.000175625 sec
+{
+	imgIndex++;
+	// prepare the string with GPS data to send via USB
+	snprintf(buffer, 101, "Image index:%i,Date:%i/%i/%i %i:%i:%i.%liLat:%li.%li,Lon:%li.%li\n\r", imgIndex, ubxMessage.pvt.year, ubxMessage.pvt.month, ubxMessage.pvt.day, ubxMessage.pvt.hour,ubxMessage.pvt.minute, ubxMessage.pvt.second, ubxMessage.pvt.nano, ubxMessage.pvt.lat/10000000, ubxMessage.pvt.lat%10000000, ubxMessage.pvt.lon/10000000, ubxMessage.pvt.lon%10000000);
+	HAL_UART_Transmit_IT(&huart2, (uint8_t*)buffer, strlen(buffer));
+}
 /* USER CODE END 0 */
 
 /**
   * @brief  The application entry point.
   * @retval int
   */
+
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+// uncomment below to time cycles
+//	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
+//	DWT->CYCCNT = 0;
+//	DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+/* Do something */
+//	unsigned long t2 = DWT->CYCCNT;
+//	unsigned long diff = t2 - t1;
+//	snprintf(buffer, 101, "%li\n\r", diff);
+//	HAL_UART_Transmit_IT(&huart2, (uint8_t*)buffer, strlen(buffer));
   /* USER CODE END 1 */
   
 
@@ -88,22 +114,26 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  initBuffer(&rxBuffer, CIRCULAR_RX);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init(); // Camera Hotshoe interrupt pin
+  MX_DMA_Init();  // GPS receive DMA init.
   MX_USART1_UART_Init(); // GPS receive init. Read bytes in IT
   MX_USART2_UART_Init(); // ST-Link (USB) Init. Used for transferring last GPS data when Camera Hotshoe interrupts
-//  HAL_UART_Receive_IT(&huart1, &byte, 1); // enable Receive Data register not empty interrupt
+
   /* USER CODE BEGIN 2 */
   HAL_GPIO_WritePin(LED3_GPIO_Port, LED3_Pin, GPIO_PIN_SET);
+
+  HAL_UART_Receive_IT(&huart1, &c, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	readGPS(&rxBuffer);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -169,17 +199,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
   if(GPIO_Pin == GPIO_PIN_1)
   {
-	const char *msg = "Hello World!\n\r";
-	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 0xFFFF);
+    sendGPSData();
   }
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) // takes about 360 cycles -> 360/80Mhz = 0.0000045 sec
 {
   if (huart->Instance == USART1)
   {
-	/* Receive one byte in interrupt mode */
-    HAL_UART_Receive_IT(&huart1, rxBuffer, 2);
+	  putChar(&rxBuffer, c);
+	  HAL_UART_Receive_IT(&huart1, &c, 1);
   }
 }
 /* USER CODE END 4 */
