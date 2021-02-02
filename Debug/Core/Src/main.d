@@ -1,5 +1,5 @@
-Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/RingBuffer.h \
- ../Core/Inc/main.h ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
+Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/main.h \
+ ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h \
@@ -30,9 +30,9 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/RingBuffer.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
  ../Core/Inc/dma.h ../Core/Inc/main.h ../Core/Inc/gpio.h \
- ../Core/Inc/usart.h
-
-../Core/Inc/RingBuffer.h:
+ ../Core/Inc/usart.h ../Core/Inc/ublox_gps.h ../Core/Inc/CircularBuffer.h \
+ ../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32L4xx.h \
+ ../Core/Inc/CircularBuffer.h
 
 ../Core/Inc/main.h:
 
@@ -103,3 +103,11 @@ Core/Src/main.o: ../Core/Src/main.cpp ../Core/Inc/RingBuffer.h \
 ../Core/Inc/gpio.h:
 
 ../Core/Inc/usart.h:
+
+../Core/Inc/ublox_gps.h:
+
+../Core/Inc/CircularBuffer.h:
+
+../Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32L4xx.h:
+
+../Core/Inc/CircularBuffer.h:
