@@ -22,7 +22,7 @@
 //#include <RingBuffer.h>
 #include "main.h"
 extern "C" {
-#include "dma.h"
+//#include "dma.h"
 #include "gpio.h"
 #include "usart.h"
 #include "ublox_gps.h"
@@ -50,9 +50,6 @@ extern "C" {
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-#define RX_BUFFER_SIZE 172 // Max M8N message size
-static const uint8_t NAV_PVT_payloadSize = 96; // M8N protocol
-
 struct _commBuffer_t rxBuffer; // max buffer size is defined in CircularBuffer.h
 
 uint8_t c = {0};
@@ -93,6 +90,8 @@ int main(void)
 //	CoreDebug->DEMCR |= CoreDebug_DEMCR_TRCENA_Msk;
 //	DWT->CYCCNT = 0;
 //	DWT->CTRL |= DWT_CTRL_CYCCNTENA_Msk;
+
+//	unsigned long t1 = DWT->CYCCNT;
 /* Do something */
 //	unsigned long t2 = DWT->CYCCNT;
 //	unsigned long diff = t2 - t1;
@@ -119,7 +118,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init(); // Camera Hotshoe interrupt pin
-  MX_DMA_Init();  // GPS receive DMA init.
+//  MX_DMA_Init();  // GPS receive DMA init.
   MX_USART1_UART_Init(); // GPS receive init. Read bytes in IT
   MX_USART2_UART_Init(); // ST-Link (USB) Init. Used for transferring last GPS data when Camera Hotshoe interrupts
 

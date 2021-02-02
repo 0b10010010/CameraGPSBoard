@@ -5,7 +5,6 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../Core/Src/CircularBuffer.c \
-../Core/Src/RingBuffer.c \
 ../Core/Src/dma.c \
 ../Core/Src/gpio.c \
 ../Core/Src/stm32l4xx_hal_msp.c \
@@ -16,16 +15,11 @@ C_SRCS += \
 ../Core/Src/ublox_gps.c 
 
 CPP_SRCS += \
-../Core/Src/GPS_UBLOX.cpp \
-../Core/Src/Location.cpp \
 ../Core/Src/main.cpp \
 ../Core/Src/usart.cpp 
 
 OBJS += \
 ./Core/Src/CircularBuffer.o \
-./Core/Src/GPS_UBLOX.o \
-./Core/Src/Location.o \
-./Core/Src/RingBuffer.o \
 ./Core/Src/dma.o \
 ./Core/Src/gpio.o \
 ./Core/Src/main.o \
@@ -39,7 +33,6 @@ OBJS += \
 
 C_DEPS += \
 ./Core/Src/CircularBuffer.d \
-./Core/Src/RingBuffer.d \
 ./Core/Src/dma.d \
 ./Core/Src/gpio.d \
 ./Core/Src/stm32l4xx_hal_msp.d \
@@ -50,8 +43,6 @@ C_DEPS += \
 ./Core/Src/ublox_gps.d 
 
 CPP_DEPS += \
-./Core/Src/GPS_UBLOX.d \
-./Core/Src/Location.d \
 ./Core/Src/main.d \
 ./Core/Src/usart.d 
 
@@ -59,12 +50,6 @@ CPP_DEPS += \
 # Each subdirectory must supply rules for building sources it contributes
 Core/Src/CircularBuffer.o: ../Core/Src/CircularBuffer.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32L412xx -DDEBUG -c -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/CircularBuffer.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Core/Src/GPS_UBLOX.o: ../Core/Src/GPS_UBLOX.cpp
-	arm-none-eabi-g++ "$<" -mcpu=cortex-m4 -std=gnu++14 -g3 -DUSE_HAL_DRIVER -DSTM32L412xx -DDEBUG -c -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -O0 -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti -fno-threadsafe-statics -fno-use-cxa-atexit -Wall -fstack-usage -MMD -MP -MF"Core/Src/GPS_UBLOX.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Core/Src/Location.o: ../Core/Src/Location.cpp
-	arm-none-eabi-g++ "$<" -mcpu=cortex-m4 -std=gnu++14 -g3 -DUSE_HAL_DRIVER -DSTM32L412xx -DDEBUG -c -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -O0 -ffunction-sections -fdata-sections -fno-exceptions -fno-rtti -fno-threadsafe-statics -fno-use-cxa-atexit -Wall -fstack-usage -MMD -MP -MF"Core/Src/Location.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
-Core/Src/RingBuffer.o: ../Core/Src/RingBuffer.c
-	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32L412xx -DDEBUG -c -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/RingBuffer.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Core/Src/dma.o: ../Core/Src/dma.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32L412xx -DDEBUG -c -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/CMSIS/Device/ST/STM32L4xx/Include -I../Drivers/STM32L4xx_HAL_Driver/Inc -I../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/dma.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Core/Src/gpio.o: ../Core/Src/gpio.c
