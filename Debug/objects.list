@@ -1,7 +1,4 @@
 "Core/Src/CircularBuffer.o"
-"Core/Src/GPS_UBLOX.o"
-"Core/Src/Location.o"
-"Core/Src/RingBuffer.o"
 "Core/Src/dma.o"
 "Core/Src/gpio.o"
 "Core/Src/main.o"
