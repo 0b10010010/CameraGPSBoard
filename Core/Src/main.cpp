@@ -23,6 +23,7 @@
 #include "main.h"
 extern "C" {
 //#include "dma.h"
+#include "stdlib.h"
 #include "gpio.h"
 #include "usart.h"
 #include "ublox_gps.h"
@@ -50,7 +51,7 @@ extern "C" {
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-struct _commBuffer_t rxBuffer; // max buffer size is defined in CircularBuffer.h
+_commBuffer_t rxBuffer; // max buffer size is defined in CircularBuffer.h
 
 uint8_t c = {0};
 
@@ -73,7 +74,7 @@ void sendGPSData() // takes about 14050 cycles -> 14050/80MHz = 0.000175625 sec
 {
 	imgIndex++;
 	// prepare the string with GPS data to send via USB
-	snprintf(buffer, 101, "Image index:%i,Date:%i/%i/%i %i:%i:%i.%liLat:%li.%li,Lon:%li.%li\n\r", imgIndex, ubxMessage.pvt.year, ubxMessage.pvt.month, ubxMessage.pvt.day, ubxMessage.pvt.hour,ubxMessage.pvt.minute, ubxMessage.pvt.second, ubxMessage.pvt.nano, ubxMessage.pvt.lat/10000000, ubxMessage.pvt.lat%10000000, ubxMessage.pvt.lon/10000000, ubxMessage.pvt.lon%10000000);
+	snprintf(buffer, 101, "Image index:%i,Date:%i/%i/%i %i:%i:%i.%liLat:%li.%li,Lon:%li.%li\n\r", imgIndex, ubxMessage.pvt.year, ubxMessage.pvt.month, ubxMessage.pvt.day, ubxMessage.pvt.hour,ubxMessage.pvt.minute, ubxMessage.pvt.second, ubxMessage.pvt.nano, ubxMessage.pvt.lat/10000000, abs(ubxMessage.pvt.lat%10000000), ubxMessage.pvt.lon/10000000, abs(ubxMessage.pvt.lon%10000000));
 	HAL_UART_Transmit_IT(&huart2, (uint8_t*)buffer, strlen(buffer));
 }
 /* USER CODE END 0 */
