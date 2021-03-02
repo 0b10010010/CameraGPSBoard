@@ -1,8 +1,12 @@
 # CameraGPSBoard
 STM32L4 Camera Trigger GPS Tagging
 
-STM32L4 A1: Camera hotshoe signal(white) wire </br>
-<span style="color:green">some D0(RX) text</span>: GPS signal(green) wire</br>
-       GND: Both GNDs from hotshoe and GPS to GND on the board
+Table below shows the connection scheme for the image analysis hardware used
+
+| STM32L4 | SONY A6000 |  GPS  |
+| :-----: | :--------: | :---: |
+|   A1    |    White   |  N/A  |
+|  D0(RX) |     N/A    | Green |
+|   GND   |    Black   | Black |
 
 When the board is running the software, it will detect the hotshoe line as an interrupt to send out GPS data near the time of trigger all the while receiving and parsing UBX NAV_PVT messages. Pixhawk is configured to receive GPS data at 10Hz.
